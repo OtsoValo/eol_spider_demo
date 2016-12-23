@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for eof_spider project
+# Scrapy settings for eol_spider project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -10,13 +10,13 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 import _mysql
 
-BOT_NAME = 'eof_spider'
+BOT_NAME = 'eol_spider'
 
-SPIDER_MODULES = ['eof_spider.spiders']
-NEWSPIDER_MODULE = 'eof_spider.spiders'
+SPIDER_MODULES = ['eol_spider.spiders']
+NEWSPIDER_MODULE = 'eol_spider.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-# USER_AGENT = 'eof_spider (+http://www.yourdomain.com)'
+# USER_AGENT = 'eol_spider (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -47,13 +47,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 # SPIDER_MIDDLEWARES = {
-#    'eof_spider.middlewares.EofSpiderSpiderMiddleware': 543,
+#    'eol_spider.middlewares.EolSpiderSpiderMiddleware': 543,
 # }
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 # DOWNLOADER_MIDDLEWARES = {
-#    'eof_spider.middlewares.MyCustomDownloaderMiddleware': 543,
+#    'eol_spider.middlewares.MyCustomDownloaderMiddleware': 543,
 # }
 
 # Enable or disable extensions
@@ -65,7 +65,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'eof_spider.pipelines.EofSpiderPipeline': 300,
+    'eol_spider.pipelines.EolSpiderPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -96,5 +96,5 @@ ITEM_PIPELINES = {
 mysql_host = '127.0.0.1'
 mysql_user = 'root'
 mysql_passwd = 'root'
-mysql_dbname = 'eof_candidates'
+mysql_dbname = 'eol_candidates'
 mysql_connection = _mysql.connect(host=mysql_host, user=mysql_user, passwd=mysql_passwd, db=mysql_dbname)

@@ -56,7 +56,6 @@ class CandidatePublicationsItem(Item):
 
 
 class CandidateCoursesItem(Item):
-    cc_id = Field()
     cb_id = Field()
     courses_no = Field()
     courses_desc = Field()
