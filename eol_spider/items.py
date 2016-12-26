@@ -73,3 +73,49 @@ class CandidateWorkexperienceItem(Item):
     desc = Field()
     create_time = Field()
 
+
+class GoogleCategoryItem(Item):
+    fid = Field()
+    name = Field()
+    cate_url = Field()
+    create_time = Field()
+
+
+class GooglePublicationItem(Item):
+    cate1_id = Field()
+    cate2_id = Field()
+    name = Field()
+    desc = Field()
+    h5_idx = Field()
+    h5_med = Field()
+    rank = Field()
+    create_time = Field()
+
+
+class GoogleArticlesItem(Item):
+    publication_id = Field()
+    cate1_id = Field()
+    cate2_id = Field()
+    article_title = Field()
+    article_link = Field()
+    article_authors = Field()
+    publish_info = Field()
+    ref_link = Field()
+    ref_count = Field()
+    publish_date = Field()
+    create_time = Field()
+
+
+class GoogleAuthorsItem(Item):
+    publication_id = Field()
+    article_id = Field()
+    affiliation_id = Field()
+    fullname = Field()
+    create_time = Field()
+
+
+class GoogleAffiliationItem(Item):
+    publication_id = Field()
+    article_id = Field()
+    desc = Field()
+    create_time = Field()

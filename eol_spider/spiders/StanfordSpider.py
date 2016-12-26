@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
-import logging
-from scrapy.utils.log import configure_logging
-import datetime
-
 from eol_spider.items import CandidateBasicItem, CandidateCoursesItem, CandidateEducationItem, \
     CandidatePublicationsItem, CandidateResearchItem, CandidateWorkexperienceItem
 from eol_spider.datafilter import DataFilter
@@ -11,10 +6,8 @@ from eol_spider.mysql_utils import MYSQLUtils
 from eol_spider.settings import mysql_connection
 from eol_spider.func import mysql_datetime
 
-
 from scrapy.spiders import CrawlSpider
 from scrapy import Request
-
 
 
 class StanfordSpider(CrawlSpider):
@@ -30,11 +23,10 @@ class StanfordSpider(CrawlSpider):
         'https://ed.stanford.edu/faculty/profiles'
     ]
 
-
     def parse(self, response):
-        #return
+        # return
         for url in response.xpath(
-                '//div[contains(@class, "views-row")]/descendant::div[contains(@class, "name")]/descendant::a/@href').\
+                '//div[contains(@class, "views-row")]/descendant::div[contains(@class, "name")]/descendant::a/@href'). \
                 extract():
             url = self.domain + url
             yield Request(url, callback=self.parse_item)
@@ -59,9 +51,6 @@ class StanfordSpider(CrawlSpider):
 
         cw_items = self.parse_candidate_workexperience_item(response, cb_id)
         MYSQLUtils.save(self, "candidate_workexperience", cw_items)
-
-
-
 
     def parse_candidate_basic_item(self, response):
         items = []
@@ -193,42 +182,12 @@ class StanfordSpider(CrawlSpider):
         return items
         pass
 
-
-
-
     def close(self, reason):
         self.db.close()
         super(StanfordSpider, self).close(self, reason)
 
-
-    def __init__(self, name=None, **kwargs):
+    def __init__(self, **kwargs):
         self.db = mysql_connection
         MYSQLUtils.cleanup_data(self)
-
-        # nowdate = datetime.datetime.now().strftime('%Y%m%d')
-        # nowtime = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-        # if not os.path.isdir('log/' + self.name):
-        #     os.mkdir('log/' + self.name)
-        # if not os.path.isdir('log/' + self.name + '/' + nowdate):
-        #     os.mkdir('log/' + self.name + '/' + nowdate)
-        # logdir = 'log/' + self.name + '/' + nowdate + '/'
-        # configure_logging(install_root_handler=False)
-        # logging.basicConfig(level=logging.INFO,
-        #                     format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
-        #                     datefmt='%a, %d %b %Y %H:%M:%S',
-        #                     filename=logdir + self.name + '_' + nowtime + '.log',
-        #                     filemode='w')
-        # logging.getLogger('scrapy').setLevel(logging.ERROR)
-        # logging.basicConfig(
-        #     filename=logdir + self.name + '_' + nowtime + '.log',
-        #     level=logging.INFO
-        # )
-        # logging.basicConfig(
-        #     filename=logdir + self.name + '_' + nowtime + '_error.log',
-        #     level=logging.ERROR
-        # )
-        # ScrapyFileLogObserver(open(logdir+self.name+'_'+nowtime+'.log', 'w'), level=logging.INFO).start()
-        # ScrapyFileLogObserver(open(logdir+self.name+'_'+nowtime+'_error.log', 'w'), level=logging.ERROR).start()
-
-        super(StanfordSpider, self).__init__(name, **kwargs)
+        super(StanfordSpider, self).__init__(**kwargs)
         pass

@@ -4,7 +4,7 @@
 #
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/spider-middleware.html
-
+import base64
 from scrapy import signals
 
 
@@ -50,6 +50,14 @@ class EolSpiderSpiderMiddleware(object):
 
         # Must return only requests (not items).
         for r in start_requests:
+            # Set the location of the proxy
+            r.meta['proxy'] = "http://210.48.237.254:3128"
+
+            # Use the following lines if your proxy requires authentication
+            proxy_user_pass = "USERNAME:PASSWORD"
+            # setup basic authentication for the proxy
+            encoded_user_pass = base64.encodestring(proxy_user_pass)
+            r.headers['Proxy-Authorization'] = 'Basic ' + encoded_user_pass
             yield r
 
     def spider_opened(self, spider):

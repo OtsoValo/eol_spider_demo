@@ -19,7 +19,7 @@ NEWSPIDER_MODULE = 'eol_spider.spiders'
 # USER_AGENT = 'eol_spider (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
@@ -53,7 +53,7 @@ ROBOTSTXT_OBEY = True
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 # DOWNLOADER_MIDDLEWARES = {
-#    'eol_spider.middlewares.MyCustomDownloaderMiddleware': 543,
+#    'eol_spider.middlewares.EolSpiderSpiderMiddleware': 543,
 # }
 
 # Enable or disable extensions
@@ -91,10 +91,39 @@ ITEM_PIPELINES = {
 
 
 
-
 # set mysql connection
 mysql_host = '127.0.0.1'
 mysql_user = 'root'
 mysql_passwd = 'root'
 mysql_dbname = 'eol_candidates'
 mysql_connection = _mysql.connect(host=mysql_host, user=mysql_user, passwd=mysql_passwd, db=mysql_dbname)
+
+
+
+
+# # Retry many times since proxies often fail
+# RETRY_TIMES = 10
+# # Retry on most error codes since proxies fail for different reasons
+# RETRY_HTTP_CODES = [500, 503, 504, 400, 403, 404, 408]
+#
+# DOWNLOADER_MIDDLEWARES = {
+#     'scrapy.downloadermiddlewares.retry.RetryMiddleware': 90,
+#     'scrapy_proxies.RandomProxy': 100,
+#     'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 110,
+# }
+#
+# # Proxy list containing entries like
+# # http://host1:port
+# # http://username:password@host2:port
+# # http://host3:port
+# # ...
+# PROXY_LIST = 'eol_spider/proxy_list.txt'
+#
+# # Proxy mode
+# # 0 = Every requests have different proxy
+# # 1 = Take only one proxy from the list and assign it to every requests
+# # 2 = Put a custom proxy to use in the settings
+# PROXY_MODE = 1
+#
+# # If proxy mode is 2 uncomment this sentence :
+# #CUSTOM_PROXY = "http://162.144.122.10:80"

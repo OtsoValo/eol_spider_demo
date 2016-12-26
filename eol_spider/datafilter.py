@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import urlparse
 import urllib
 import MySQLdb
+import warnings
 
 
 class DataFilter(object):
@@ -35,9 +36,11 @@ class DataFilter(object):
 
     @staticmethod
     def strip_tags(data):
-        soup = BeautifulSoup(data, "lxml")
-        data = soup.get_text()
-
+        try:
+            soup = BeautifulSoup(data, "lxml")
+            data = soup.get_text()
+        except UserWarning:
+            pass
         return data
 
     @staticmethod
