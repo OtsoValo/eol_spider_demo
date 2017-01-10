@@ -32,7 +32,8 @@ class DataFilter(object):
     def simple_format(data):
         if len(data) == 0:
             return ''
-        return MySQLdb.escape_string(DataFilter.trim(DataFilter.remove_linefeed(DataFilter.strip_tags(data[0]))).encode('ascii', 'ignore'))
+        return MySQLdb.escape_string(DataFilter.trim(
+            DataFilter.remove_linefeed(DataFilter.strip_tags(data[0]))).encode('ascii', 'ignore'))
 
     @staticmethod
     def strip_tags(data):

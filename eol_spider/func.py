@@ -1,5 +1,6 @@
 import datetime
 from eol_spider.datafilter import DataFilter
+import re
 
 
 def mysql_datetime():
@@ -19,3 +20,15 @@ def get_google_spider_url(origin_url):
                         "&hl=zh-CN&q=EgSAx54QGIrXgsMFIhkA8aeDS5qZGSfjywVPCg6UscyzSOslsXzgMgFj" % origin_url
     #return google_spider_url
     return origin_url
+
+
+def get_chinese_by_fullname(fullname, surname_list):
+    for name in re.split(",|\s+", fullname):
+        name = name.strip()
+        if not name:
+            continue
+        if name in surname_list:
+            return "China"
+    return ""
+
+

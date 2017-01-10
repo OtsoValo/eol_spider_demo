@@ -10,6 +10,8 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 import _mysql
 
+from eol_spider.mysql_utils import MYSQLUtils
+
 BOT_NAME = 'eol_spider'
 
 SPIDER_MODULES = ['eol_spider.spiders']
@@ -99,6 +101,9 @@ mysql_dbname = 'eol_candidates'
 mysql_connection = _mysql.connect(host=mysql_host, user=mysql_user, passwd=mysql_passwd, db=mysql_dbname)
 
 
+query_sql = "SELECT `surname` FROM `dim_surname`"
+surname_list = MYSQLUtils.fetch_result(mysql_connection, query_sql)
+surname_list = [i['surname'] for i in surname_list]
 
 
 # # Retry many times since proxies often fail

@@ -3,8 +3,8 @@ from eol_spider.items import CandidateBasicItem, CandidateCoursesItem, Candidate
     CandidatePublicationsItem, CandidateResearchItem, CandidateWorkexperienceItem
 from eol_spider.datafilter import DataFilter
 from eol_spider.mysql_utils import MYSQLUtils
-from eol_spider.settings import mysql_connection
-from eol_spider.func import mysql_datetime, parse_text_by_multi_content
+from eol_spider.settings import mysql_connection, surname_list
+from eol_spider.func import mysql_datetime, parse_text_by_multi_content, get_chinese_by_fullname
 
 from scrapy.spiders import CrawlSpider
 from scrapy import Request
@@ -29,13 +29,17 @@ class ComputerScienceOfWaterLooSpider(CrawlSpider):
         for staff in response.xpath(
                 '//div[contains(@class, "staff-contact")]'):
             cb_items = self.parse_candidate_basic_item(staff)
-            cb_id = MYSQLUtils.save(self, "candidate_basic", cb_items)[0]
             staff_profile_url = self.parse_staff_profile_url(staff)
             if staff_profile_url:
-                print staff_profile_url
+                cb_items[0]['url'] = staff_profile_url
+            else:
+                cb_items[0]['url'] = response.url
+            cb_id = MYSQLUtils.save(self, "candidate_basic", cb_items)[0]
+            if staff_profile_url:
+                #print staff_profile_url
                 yield Request(staff_profile_url, callback=self.parse_staff_profile, meta={"cb_id": cb_id})
                 pass
-                print cb_id
+                #print cb_id
             #i += 1
             #if i > 4:
             #    break
@@ -96,7 +100,7 @@ class ComputerScienceOfWaterLooSpider(CrawlSpider):
         item['academic_title'] = DataFilter.simple_format(
             staff.xpath('descendant::*[@property="schema:jobTitle"]').extract())
         item['other_title'] = ''
-        item['nationality'] = ''
+        item['nationality'] = get_chinese_by_fullname(item['fullname'], surname_list)
         item['email'] = DataFilter.simple_format(
             staff.xpath('descendant::*[@property="schema:email"]').extract())
         item['phonenumber'] = DataFilter.simple_format(

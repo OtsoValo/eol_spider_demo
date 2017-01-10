@@ -3,8 +3,8 @@ from eol_spider.items import CandidateBasicItem, CandidateCoursesItem, Candidate
     CandidatePublicationsItem, CandidateResearchItem, CandidateWorkexperienceItem
 from eol_spider.datafilter import DataFilter
 from eol_spider.mysql_utils import MYSQLUtils
-from eol_spider.settings import mysql_connection
-from eol_spider.func import mysql_datetime
+from eol_spider.settings import mysql_connection, surname_list
+from eol_spider.func import mysql_datetime, get_chinese_by_fullname
 
 from scrapy.spiders import CrawlSpider
 from scrapy import Request
@@ -34,8 +34,8 @@ class StanfordSpider(CrawlSpider):
 
     def parse_item(self, response):
         # print response.body
-        cb_items = self.parse_candidate_basic_item(response)
-        cb_id = MYSQLUtils.save(self, "candidate_basic", cb_items)[0]
+        cb_item = self.parse_candidate_basic_item(response)
+        cb_id = MYSQLUtils.save(self, "candidate_basic", cb_item)[0]
         # print cb_id
         ce_items = self.parse_candidate_education_item(response, cb_id)
         MYSQLUtils.save(self, "candidate_education", ce_items)
@@ -53,7 +53,7 @@ class StanfordSpider(CrawlSpider):
         MYSQLUtils.save(self, "candidate_workexperience", cw_items)
 
     def parse_candidate_basic_item(self, response):
-        items = []
+
         item = CandidateBasicItem()
         item['country_id'] = self.country_id
         item['college_id'] = self.college_id
@@ -66,7 +66,7 @@ class StanfordSpider(CrawlSpider):
         item['other_title'] = DataFilter.simple_format(response.xpath(
             '//div[contains(@class, "field-label") and contains(text(), "Other Titles")]/following-sibling::*')
                                                        .extract())
-        item['nationality'] = ''
+        item['nationality'] = get_chinese_by_fullname(item['fullname'], surname_list)
         item['email'] = DataFilter.simple_format(
             response.xpath('//a[contains(@href, "mailto:")]/text()[normalize-space(.)]').extract())
         item['phonenumber'] = DataFilter.simple_format(
@@ -79,9 +79,10 @@ class StanfordSpider(CrawlSpider):
             response.xpath('//div[contains(@class, "field-name-field-profile-photo")]/descendant::img/@src').extract())
         item['create_time'] = mysql_datetime()
         item['extra'] = ''
-        items.append(item)
+        item['url'] = response.url
+        #items.append(item)
         # print items
-        return items
+        return item
         pass
 
     def parse_candidate_education_item(self, response, cb_id):

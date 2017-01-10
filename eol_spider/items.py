@@ -25,6 +25,7 @@ class CandidateBasicItem(Item):
     desc = Field()
     extra = Field()
     avatar_url = Field()
+    url = Field()
     discipline_desc = Field()
     create_time = Field()
 
@@ -119,3 +120,5 @@ class GoogleAffiliationItem(Item):
     article_id = Field()
     desc = Field()
     create_time = Field()
+
+

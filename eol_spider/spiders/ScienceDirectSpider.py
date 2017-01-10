@@ -61,3 +61,9 @@ class ScienceDirectSpider(CrawlSpider):
         MYSQLUtils.cleanup_google_author_affiliations(self, self.domain)
         super(ScienceDirectSpider, self).__init__(**kwargs)
         pass
+
+
+
+
+
+

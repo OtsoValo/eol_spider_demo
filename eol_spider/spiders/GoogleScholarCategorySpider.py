@@ -12,9 +12,9 @@ from scrapy import Request
 
 class GoogleScholarCategorySpider(CrawlSpider):
     name = 'GoogleScholarCategorySpider'
-    custom_settings = {
-        'DOWNLOAD_DELAY': '5',
-    }
+    # custom_settings = {
+    #     'DOWNLOAD_DELAY': '5',
+    # }
     domain = 'https://scholar.google.co.jp'
     start_urls = [
         'https://scholar.google.co.jp/citations?view_op=top_venues&hl=zh-CN'
