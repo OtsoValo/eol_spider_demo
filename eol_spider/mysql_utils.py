@@ -184,3 +184,54 @@ class MYSQLUtils(object):
         #print query_sql
         article_link_list = MYSQLUtils.fetch_result(db, query_sql)
         return article_link_list
+
+    @staticmethod
+    def fetch_courses_data(db):
+        query_sql = "SELECT \
+                            `courses_desc`\
+                            FROM `candidate_courses`\
+                            WHERE courses_desc!=''"
+        data = MYSQLUtils.fetch_result(db, query_sql, how=0)
+        return data
+
+    @staticmethod
+    def fetch_education_data(db):
+        query_sql = "SELECT \
+                                `desc`\
+                                FROM `candidate_education`\
+                                WHERE `desc`!=''"
+        data = MYSQLUtils.fetch_result(db, query_sql, how=0)
+        return data
+
+    @staticmethod
+    def fetch_publications_data(db):
+        query_sql = "SELECT \
+                                `publications`\
+                                FROM `candidate_publications`\
+                                WHERE publications!=''"
+        data = MYSQLUtils.fetch_result(db, query_sql, how=0)
+        return data
+
+    @staticmethod
+    def fetch_research_data(db):
+        query_sql = "SELECT \
+                                `interests`,\
+                                `current_research`,\
+                                `research_summary`\
+                                FROM `candidate_research`\
+                                WHERE (interests!='') or \
+                                      (current_research!='') or \
+                                      (research_summary!='')\
+                                "
+        data = MYSQLUtils.fetch_result(db, query_sql, how=0)
+        return data
+
+    @staticmethod
+    def fetch_workexperience_data(db):
+        query_sql = "SELECT \
+                                `desc`\
+                                FROM `candidate_workexperience`\
+                                WHERE `desc`!=''"
+        data = MYSQLUtils.fetch_result(db, query_sql, how=0)
+        return data
+

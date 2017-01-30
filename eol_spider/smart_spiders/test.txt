@@ -1,0 +1,19 @@
+{
+    'nodes':
+        {'/html/body[1]/div[1]/p[1]': {'xpath': '/html/body[1]/div[1]/p[1]', 'node': <Selector xpath='child::node()' data=u'<p>p-b-first<b>bold</b>p-b-last</p>'>, 'last': 0, 'name': 'p[1]', 'text': '<p>p-b-first<b>bold</b>p-b-last</p>div-p-last', 'tag': 'p'},
+        '/html/body[1]': {'xpath': '/html/body[1]', 'node': <Selector xpath='child::node()' data=u'<body><div>div-p-first<p>p-b-first<b>bol'>, 'last': 0, 'name': 'body[1]', 'text': '<body><div>div-p-first<p>p-b-first<b>bold</b>p-b-last</p>div-p-last</div></body>', 'tag': 'body'},
+        '/html/body[1]/div[1]/p[1]/b[1]': {'xpath': '/html/body[1]/div[1]/p[1]/b[1]', 'node': <Selector xpath='child::node()' data=u'<b>bold</b>'>, 'last': 1, 'name': 'b[1]', 'text': '<b>bold</b>p-b-last', 'tag': 'b'},
+        '/html': {'xpath': '/html', 'node': <200 http://www.ebizship_mvc.net>, 'last': 0, 'name': 'root', 'text': '', 'tag': 'html'},
+        '/html/body[1]/div[1]': {'xpath': '/html/body[1]/div[1]', 'node': <Selector xpath='child::node()' data=u'<div>div-p-first<p>p-b-first<b>bold</b>p'>, 'last': 0, 'name': 'div[1]', 'text': '<div>div-p-first<p>p-b-first<b>bold</b>p-b-last</p>div-p-last</div>', 'tag': 'div'}
+        },
+    'last2_nodes':
+        {'/html/body[1]/div[1]/p[1]': {'xpath': '/html/body[1]/div[1]/p[1]', 'node': <Selector xpath='child::node()' data=u'<p>p-b-first<b>bold</b>p-b-last</p>'>, 'last': 0, 'name': 'p[1]', 'text': '<p>p-b-first<b>bold</b>p-b-last</p>div-p-last', 'tag': 'p'}
+        },
+    'last_nodes':
+        {'/html/body[1]/div[1]/p[1]/b[1]': {'xpath': '/html/body[1]/div[1]/p[1]/b[1]', 'node': <Selector xpath='child::node()' data=u'<b>bold</b>'>, 'last': 1, 'name': 'b[1]', 'text': '<b>bold</b>p-b-last', 'tag': 'b'}
+        },
+    'last3_nodes':
+        {'/html/body[1]/div[1]': {'xpath': '/html/body[1]/div[1]', 'node': <Selector xpath='child::node()' data=u'<div>div-p-first<p>p-b-first<b>bold</b>p'>, 'last': 0, 'name': 'div[1]', 'text': '<div>div-p-first<p>p-b-first<b>bold</b>p-b-last</p>div-p-last</div>', 'tag': 'div'}
+        }
+
+}

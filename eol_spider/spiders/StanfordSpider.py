@@ -28,11 +28,13 @@ class StanfordSpider(CrawlSpider):
         for url in response.xpath(
                 '//div[contains(@class, "views-row")]/descendant::div[contains(@class, "name")]/descendant::a/@href'). \
                 extract():
-            url = self.domain + url
+            if url[:1] == "/":
+                url = self.domain + url
             yield Request(url, callback=self.parse_item)
-            # break
+            #break
 
     def parse_item(self, response):
+        pass
         # print response.body
         cb_item = self.parse_candidate_basic_item(response)
         cb_id = MYSQLUtils.save(self, "candidate_basic", cb_item)[0]

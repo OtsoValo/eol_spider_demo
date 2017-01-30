@@ -106,6 +106,12 @@ surname_list = MYSQLUtils.fetch_result(mysql_connection, query_sql)
 surname_list = [i['surname'] for i in surname_list]
 
 
+HTTPCACHE_ENABLED=True
+HTTPCACHE_EXPIRATION_SECS=0
+HTTPCACHE_DIR='httpcache'
+HTTPCACHE_IGNORE_HTTP_CODES=[]
+HTTPCACHE_STORAGE='scrapy.extensions.httpcache.FilesystemCacheStorage'
+
 # # Retry many times since proxies often fail
 # RETRY_TIMES = 10
 # # Retry on most error codes since proxies fail for different reasons
