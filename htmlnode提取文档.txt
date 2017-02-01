@@ -1,0 +1,32 @@
+方法都在func.py文件中
+
+1.extract_guesser_nodes
+#从scrapy爬虫返回的response中提取html node的方法
+"""
+guesser nodes返回倒数3层html节点信息，以及原始节点信息
+    guesser_nodes = {
+        "last_nodes": last_nodes,
+        "last2_nodes": last2_nodes,
+        "last3_nodes": last3_nodes,
+        "nodes": nodes
+    }
+"""
+def extract_guesser_nodes(root):
+
+2.recursive_nodes
+#递归调用scrapy Selector类，遍历所有html node，将其转化为字典dict
+def recursive_nodes(root, nodes, xpath):
+
+3.下面方法从nodes字典中提取出最后n层节点
+def get_last_nodes(nodes):
+def get_lastn_nodes(last_nodes, n, nodes):
+
+4.check_text_meaningful
+#判断是否是有意义的长文本
+"""
+文本过滤规则:
+1.文本为空
+2.含有注释字符串
+3.tokenize后的长度小于等于10
+"""
+def check_text_meaningful(text, analyzer_result):

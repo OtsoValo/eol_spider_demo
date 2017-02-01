@@ -1,0 +1,79 @@
+模版爬虫文档
+
+模版爬虫使用方式
+1.设置PYTHON环境变量
+2.搭建好scrapy环境
+3.根据要抓取的内容编写好配置文件properties
+4.执行 python generate_spider_srcfile.py <prop_file_absolute_path> <spider_name>
+5.程序会自动在spiders目录下生成AST结尾的python文件
+
+模版爬虫适用范围:
+适合目前大部分的爬取方式，即按照start_url -> list -> detail这种方式进行爬取的爬虫，其他类型爬虫大家可以自己编写模版来实现。
+
+模版爬虫API:
+
+class Properties
+	
+	def get_properties
+	
+#该类用于解析properties文件内容，将其转化为python字典dict
+
+#模版爬虫的Base类
+class BaseSpiderGenerator
+	
+	#初始化时读取properties文件，获取模版爬虫配置
+	def __init__(self, properties_path, spider_name):
+	
+	#依据三部分的AST node，来生成爬虫源码
+	#三部分AST: import, spider_classdef, spider_classbody
+	def create_spider_srcfile(self, import_ast, spider_classdef_ast, spider_classbody):
+	
+	#依据三部分的AST node，组合成整个爬虫的AST node
+	def build_ast(self, import_ast, spider_classdef_ast, spider_classbody):
+	
+	#生成close function的AST node
+	def build_close_ast(self):
+	
+	#生成xpath提取代码的AST node，即生成如下代码的AST node
+	#item['fullname'] = DataFilter.simple_format(response.xpath('//h1[@id="page-title"]/text()[normalize-space(.)]').extract())
+	def build_extract_ast(self, key, xpath_prop, ret='', root='response'):
+	
+
+#大学类型模版爬虫类,继承于BaseSpiderGenerator
+class CollegeSpiderGenerator(BaseSpiderGenerator):
+
+	#大学类型模版爬虫import都是一样的，因此封装一个方法生成import AST node
+	def build_import_ast(self):
+	
+	#生成init function的AST node，用来初始化db和删除之前爬取过的数据
+	def build_init_ast(self):
+	
+	#生成类定义的AST node
+	def build_spider_classdef_ast(self):
+	
+	#生成类属性attribute的AST node
+	def build_spider_classattr_ast(self):
+	
+
+#按照start_url -> list -> detail这种方式进行爬取的爬虫模版类,继承于CollegeSpiderGenerator
+class ListDeTailSpiderGenerator(CollegeSpiderGenerator):
+
+	#生成爬虫python源码
+	def generate(self):
+	
+	#生成parse function的AST node
+	def build_parse_ast(self):
+	
+	#生成parse_item function的AST node
+	def build_parse_item_ast(self):
+	
+	#以下方法均是依据properties文件中的xpath属性，自动生成对应的内容提取代码
+	def build_parse_candidate_basic_item_ast(self):
+	def build_parse_candidate_education_item_ast(self):
+	def build_parse_candidate_research_item_ast(self):
+	def build_parse_candidate_publications_item_ast(self):
+	def build_parse_candidate_courses_item_ast(self):
+	def build_parse_candidate_workexperience_item_ast(self):
+	
+
+

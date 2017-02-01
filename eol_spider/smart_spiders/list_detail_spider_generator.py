@@ -25,7 +25,7 @@ class ListDeTailSpiderGenerator(CollegeSpiderGenerator):
         print src
 
     """
-    run function:
+    generate function:
         1.build ast node
         2.convert ast node to source code
         3.print source code and create spider_srcfile in spiders package
