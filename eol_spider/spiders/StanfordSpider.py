@@ -5,7 +5,7 @@ from eol_spider.datafilter import DataFilter
 from eol_spider.mysql_utils import MYSQLUtils
 from eol_spider.settings import mysql_connection, surname_list
 from eol_spider.func import mysql_datetime, get_chinese_by_fullname
-
+from eol_spider.file_handler import FileHandler
 from scrapy.spiders import CrawlSpider
 from scrapy import Request
 
@@ -25,34 +25,64 @@ class StanfordSpider(CrawlSpider):
 
     def parse(self, response):
         # return
+        #i = 0
         for url in response.xpath(
                 '//div[contains(@class, "views-row")]/descendant::div[contains(@class, "name")]/descendant::a/@href'). \
                 extract():
+            #i += 1
             if url[:1] == "/":
                 url = self.domain + url
             yield Request(url, callback=self.parse_item)
-            #break
+            #if i == 5:
+            #    break
 
     def parse_item(self, response):
         pass
         # print response.body
+        # cb_item = self.parse_candidate_basic_item(response)
+        # cb_id = MYSQLUtils.save(self, "candidate_basic", cb_item)[0]
+        # # print cb_id
+        # ce_items = self.parse_candidate_education_item(response, cb_id)
+        # MYSQLUtils.save(self, "candidate_education", ce_items)
+        #
+        # cr_items = self.parse_candidate_research_item(response, cb_id)
+        # MYSQLUtils.save(self, "candidate_research", cr_items)
+        #
+        # cp_items = self.parse_candidate_publications_item(response, cb_id)
+        # MYSQLUtils.save(self, "candidate_publications", cp_items)
+        #
+        # cc_items = self.parse_candidate_courses_item(response, cb_id)
+        # MYSQLUtils.save(self, "candidate_courses", cc_items)
+        #
+        # cw_items = self.parse_candidate_workexperience_item(response, cb_id)
+        # MYSQLUtils.save(self, "candidate_workexperience", cw_items)
+
         cb_item = self.parse_candidate_basic_item(response)
-        cb_id = MYSQLUtils.save(self, "candidate_basic", cb_item)[0]
-        # print cb_id
+        if self.fmt == "mysql":
+            cb_id = MYSQLUtils.save(self, "candidate_basic", cb_item)[0]
+        else:
+            cb_id = self.fh.generate_id(cb_item['fullname']+cb_item['url'])
         ce_items = self.parse_candidate_education_item(response, cb_id)
-        MYSQLUtils.save(self, "candidate_education", ce_items)
-
         cr_items = self.parse_candidate_research_item(response, cb_id)
-        MYSQLUtils.save(self, "candidate_research", cr_items)
-
         cp_items = self.parse_candidate_publications_item(response, cb_id)
-        MYSQLUtils.save(self, "candidate_publications", cp_items)
-
         cc_items = self.parse_candidate_courses_item(response, cb_id)
-        MYSQLUtils.save(self, "candidate_courses", cc_items)
-
         cw_items = self.parse_candidate_workexperience_item(response, cb_id)
-        MYSQLUtils.save(self, "candidate_workexperience", cw_items)
+
+        if self.fmt == "mysql":
+            MYSQLUtils.save(self, "candidate_education", ce_items)
+            MYSQLUtils.save(self, "candidate_research", cr_items)
+            MYSQLUtils.save(self, "candidate_publications", cp_items)
+            MYSQLUtils.save(self, "candidate_courses", cc_items)
+            MYSQLUtils.save(self, "candidate_workexperience", cw_items)
+        else:
+            self.fh.data['candidate_basic']['item'] = cb_item
+            self.fh.data['candidate_education']['item'] = ce_items
+            self.fh.data['candidate_research']['item'] = cr_items
+            self.fh.data['candidate_publications']['item'] = cp_items
+            self.fh.data['candidate_courses']['item'] = cc_items
+            self.fh.data['candidate_workexperience']['item'] = cw_items
+            self.fh.write(self.fmt)
+
 
     def parse_candidate_basic_item(self, response):
 
@@ -186,11 +216,19 @@ class StanfordSpider(CrawlSpider):
         pass
 
     def close(self, reason):
-        self.db.close()
+        if self.fmt == "mysql":
+            self.db.close()
+        else:
+            self.fh.close()
         super(StanfordSpider, self).close(self, reason)
 
-    def __init__(self, **kwargs):
-        self.db = mysql_connection
-        MYSQLUtils.cleanup_data(self)
+    def __init__(self, fmt="mysql", **kwargs):
+        self.fmt = fmt
+        if fmt == "mysql":
+            self.db = mysql_connection
+            MYSQLUtils.cleanup_data(self)
+        else:
+            self.fh = FileHandler()
+            self.fh.cleanup_data(self, fmt)
         super(StanfordSpider, self).__init__(**kwargs)
         pass

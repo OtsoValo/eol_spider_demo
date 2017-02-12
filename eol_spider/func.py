@@ -5,7 +5,7 @@ import re
 from lxml.html import HtmlElement
 from lxml import etree
 import pprint
-
+import os
 
 def mysql_datetime():
     return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -160,4 +160,8 @@ def check_text_meaningful(text, analyzer_result):
     if len(analyzer_result) <= 10:
         return False
     return True
+
+
+
+
 
