@@ -1,0 +1,16 @@
+#!/bin/bash
+cd /opt/eol_spider_demo
+echo "开始无限循环爬取"
+i=0
+while true
+do
+    ((i=i+1));
+    echo "开始第$i次爬取"
+    scrapy crawl ResearchGateSpider
+    echo "已抓取文件数"
+    tree -i .scrapy/ | grep directories
+    echo "切换ip"
+    /usr/bin/changeip
+    echo "休息5秒"
+    sleep 5
+done

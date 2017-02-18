@@ -8,7 +8,7 @@
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
-import _mysql
+#import _mysql
 
 from eol_spider.mysql_utils import MYSQLUtils
 
@@ -98,20 +98,25 @@ mysql_host = '127.0.0.1'
 mysql_user = 'root'
 mysql_passwd = 'root'
 mysql_dbname = 'eol_candidates'
-mysql_connection = _mysql.connect(host=mysql_host, user=mysql_user, passwd=mysql_passwd, db=mysql_dbname)
+#mysql_connection = _mysql.connect(host=mysql_host, user=mysql_user, passwd=mysql_passwd, db=mysql_dbname)
+mysql_connection = None
 
-
-query_sql = "SELECT `surname` FROM `dim_surname`"
-surname_list = MYSQLUtils.fetch_result(mysql_connection, query_sql)
-surname_list = [i['surname'] for i in surname_list]
-
+#query_sql = "SELECT `surname` FROM `dim_surname`"
+#surname_list = MYSQLUtils.fetch_result(mysql_connection, query_sql)
+#surname_list = [i['surname'] for i in surname_list]
+surname_list = None
 
 HTTPCACHE_ENABLED=True
 HTTPCACHE_EXPIRATION_SECS=0
 HTTPCACHE_DIR='httpcache'
-HTTPCACHE_IGNORE_HTTP_CODES=[]
+ignore_codes = range(100, 701)
+ignore_codes.remove(200)
+#ignore_codes.remove(301)
+#ignore_codes.remove(302)
+HTTPCACHE_IGNORE_HTTP_CODES = ignore_codes
+#HTTPCACHE_IGNORE_HTTP_CODES=[]
 HTTPCACHE_STORAGE='scrapy.extensions.httpcache.FilesystemCacheStorage'
-
+HTTPERROR_ALLOWED_CODES = [301,302,200,429]
 # # Retry many times since proxies often fail
 # RETRY_TIMES = 10
 # # Retry on most error codes since proxies fail for different reasons
