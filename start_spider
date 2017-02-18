@@ -13,4 +13,13 @@ do
     /usr/bin/changeip
     echo "休息5秒"
     sleep 5
+    echo "检查网络状况..."
+    while true
+    do
+      ping=`ping -c 6 www.baidu.com|awk 'NR==7 {print int($4)}'`
+      if [ $ping -ne 0 ];then
+          echo "连续ping通6次www.baidu.com，网络ok"
+          break;
+      fi
+    done
 done
