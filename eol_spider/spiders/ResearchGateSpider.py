@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import time
 import os
 from eol_spider.items import CandidateBasicItem, CandidateCoursesItem, CandidateEducationItem, \
     CandidatePublicationsItem, CandidateResearchItem, CandidateWorkexperienceItem
@@ -100,6 +101,9 @@ class ResearchGateSpider(CrawlSpider):
         headers["referer"] = response.url
         print response.status
         if response.status == 429:
+            #os.system("/usr/bin/changeip")
+            #time.sleep(20)
+            #yield Request(response.url, headers=headers, dont_filter=True, callback=self.parse_profile_desc)
             raise CloseSpider(reason='被封了，准备切换ip')
 
         pass
