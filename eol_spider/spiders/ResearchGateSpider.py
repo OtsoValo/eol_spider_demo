@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import time
+import os
 from eol_spider.items import CandidateBasicItem, CandidateCoursesItem, CandidateEducationItem, \
     CandidatePublicationsItem, CandidateResearchItem, CandidateWorkexperienceItem
 from eol_spider.datafilter import DataFilter
@@ -9,7 +11,7 @@ from eol_spider.file_handler import FileHandler
 from scrapy.spiders import CrawlSpider
 from scrapy import Request, FormRequest
 import re
-
+from scrapy.exceptions import CloseSpider
 
 class ResearchGateSpider(CrawlSpider):
     name = 'ResearchGateSpider'
@@ -64,9 +66,13 @@ class ResearchGateSpider(CrawlSpider):
         headers = response.request.headers
         return Request(self.profile_url, headers=headers, callback=self.parse_profile)
 
-    def parse_profile(self, response):
-        headers = response.request.headers
-        headers["referer"] = response.url
+    #def parse_profile(self, response):
+    def start_requests(self):
+        #headers = response.request.headers
+        #headers["referer"] = response.url
+        headers = {
+            "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36"
+        }
         alphabet_list = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Other"]
         for alphabet in alphabet_list:
             url = "https://www.researchgate.net/directory/profiles/"+alphabet
@@ -93,7 +99,12 @@ class ResearchGateSpider(CrawlSpider):
     def parse_profile_desc(self, response):
         headers = response.request.headers
         headers["referer"] = response.url
-
+        print response.status
+        if response.status == 429:
+            #os.system("/usr/bin/changeip")
+            #time.sleep(20)
+            #yield Request(response.url, headers=headers, dont_filter=True, callback=self.parse_profile_desc)
+            raise CloseSpider(reason='被封了，准备切换ip')
 
         pass
 
@@ -105,6 +116,12 @@ class ResearchGateSpider(CrawlSpider):
 
 
     def close(self, reason):
+        #print "切换IP"
+        #os.system("/usr/bin/changeip")
+        #print "重启启动爬虫"
+        #self.start_requests()
+        #os.system("pwd")
+        #os.system("/usr/bin/start_spider")
         super(ResearchGateSpider, self).close(self, reason)
 
     def __init__(self, **kwargs):
