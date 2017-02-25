@@ -76,7 +76,7 @@ class ResearchGateSpider(CrawlSpider):
         alphabet_list = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Other"]
         for alphabet in alphabet_list:
             url = "https://www.researchgate.net/directory/profiles/"+alphabet
-            yield Request(url, headers=headers, callback=self.parse_profile_directory)
+            yield Request(url, headers=headers, callback=self.parse_profile_directory, dont_filter=True)
 
     def parse_profile_directory(self, response):
         headers = response.request.headers
@@ -85,7 +85,7 @@ class ResearchGateSpider(CrawlSpider):
                 '//ul[contains(@class, "list-directory")]/descendant::a/@href'). \
                 extract():
             url = self.domain + "/" + url
-            yield Request(url, headers=headers, callback=self.parse_profile_directory2)
+            yield Request(url, headers=headers, callback=self.parse_profile_directory2, dont_filter=True)
 
     def parse_profile_directory2(self, response):
         headers = response.request.headers
@@ -94,7 +94,7 @@ class ResearchGateSpider(CrawlSpider):
                 '//ul[contains(@class, "list-directory")]/descendant::a/@href'). \
                 extract():
             url = self.domain + "/" + url
-            yield Request(url, headers=headers, callback=self.parse_profile_desc)
+            yield Request(url, headers=headers, callback=self.parse_profile_desc, dont_filter=True)
 
     def parse_profile_desc(self, response):
         headers = response.request.headers
