@@ -109,10 +109,19 @@ surname_list = [i['surname'] for i in surname_list]
 HTTPCACHE_ENABLED=True
 HTTPCACHE_EXPIRATION_SECS=0
 HTTPCACHE_DIR='httpcache'
-HTTPCACHE_IGNORE_HTTP_CODES=[]
-HTTPCACHE_STORAGE='scrapy.extensions.httpcache.FilesystemCacheStorage'
+ignore_codes = range(100, 701)
+ignore_codes.remove(200)
+ignore_codes.remove(301)
+ignore_codes.remove(302)
+HTTPCACHE_IGNORE_HTTP_CODES = ignore_codes
+#HTTPCACHE_STORAGE='scrapy.extensions.httpcache.RedisCacheStorage'
+HTTPCACHE_STORAGE='eol_spider.httpcache.RedisCacheStorage'
+HTTPCACHE_REDIS_HOST='127.0.0.1'
+HTTPCACHE_REDIS_PORT=6379
+HTTPCACHE_REDIS_SEPARATOR="$#$%eol_spider%$#$"
 
-# # Retry many times since proxies often fail
+
+    # # Retry many times since proxies often fail
 # RETRY_TIMES = 10
 # # Retry on most error codes since proxies fail for different reasons
 # RETRY_HTTP_CODES = [500, 503, 504, 400, 403, 404, 408]

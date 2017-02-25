@@ -24,17 +24,17 @@ class StanfordSpider(CrawlSpider):
     ]
 
     def parse(self, response):
-        # return
-        #i = 0
+        #return
+        i = 0
         for url in response.xpath(
                 '//div[contains(@class, "views-row")]/descendant::div[contains(@class, "name")]/descendant::a/@href'). \
                 extract():
-            #i += 1
+            i += 1
             if url[:1] == "/":
                 url = self.domain + url
             yield Request(url, callback=self.parse_item)
-            #if i == 5:
-            #    break
+            if i == 1:
+                break
 
     def parse_item(self, response):
         pass
