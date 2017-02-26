@@ -79,6 +79,8 @@ class ResearchGateSpider(CrawlSpider):
             yield Request(url, headers=headers, callback=self.parse_profile_directory, dont_filter=True)
 
     def parse_profile_directory(self, response):
+        #print response.body
+        #return
         headers = response.request.headers
         headers["referer"] = response.url
         for url in response.xpath(

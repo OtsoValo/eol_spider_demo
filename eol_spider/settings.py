@@ -121,7 +121,7 @@ HTTPCACHE_REDIS_HOST='127.0.0.1'
 HTTPCACHE_REDIS_PORT=6379
 HTTPCACHE_REDIS_SEPARATOR="$#$%eol_spider%$#$"
 
-
+HTTPERROR_ALLOWED_CODES = [301,302,200,429]
     # # Retry many times since proxies often fail
 # RETRY_TIMES = 10
 # # Retry on most error codes since proxies fail for different reasons
