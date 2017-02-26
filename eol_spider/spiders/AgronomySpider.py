@@ -27,6 +27,7 @@ class AgronomySpider(CrawlSpider):
     hcard_pattern = re.compile(r"'(http://directory.unl.edu/hcards/[^']+)'")
 
     def parse(self, response):
+        print response.body
         # return
         #i = 0
         #该动态网页的编程思路是携带，技术实现是用scrapy的meta来携带上下文数据
