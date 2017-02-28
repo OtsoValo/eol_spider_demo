@@ -116,10 +116,17 @@ ignore_codes.remove(301)
 ignore_codes.remove(302)
 HTTPCACHE_IGNORE_HTTP_CODES = ignore_codes
 #HTTPCACHE_STORAGE='scrapy.extensions.httpcache.RedisCacheStorage'
-HTTPCACHE_STORAGE='eol_spider.httpcache.RedisCacheStorage'
-HTTPCACHE_REDIS_HOST='127.0.0.1'
-HTTPCACHE_REDIS_PORT=6379
-HTTPCACHE_REDIS_SEPARATOR="$#$%eol_spider%$#$"
+# HTTPCACHE_STORAGE='eol_spider.httpcache.RedisCacheStorage'
+# HTTPCACHE_REDIS_HOST='127.0.0.1'
+# HTTPCACHE_REDIS_PORT=6379
+# HTTPCACHE_REDIS_SEPARATOR="$#$%eol_spider%$#$"
+
+
+HTTPCACHE_STORAGE='eol_spider.httpcache.MongoCacheStorage'
+HTTPCACHE_MONGO_HOST='127.0.0.1'
+HTTPCACHE_MONGO_PORT=27017
+HTTPCACHE_MONGO_DATABASE="eol_spider"
+
 
 HTTPERROR_ALLOWED_CODES = [301,302,200,429]
     # # Retry many times since proxies often fail
