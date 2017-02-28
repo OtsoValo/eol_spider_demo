@@ -32,7 +32,7 @@ do
           if [ $ping -ne 0 ];then
              echo "连续ping通3次www.baidu.com，网络ok2"
           fi
-      
+          break;
       fi
     done
 done
