@@ -70,13 +70,19 @@ class MongoCacheStorage(object):
         self.mongo_host = settings['HTTPCACHE_MONGO_HOST']
         self.mongo_port = settings['HTTPCACHE_MONGO_PORT']
         self.mongo_db = settings['HTTPCACHE_MONGO_DATABASE']
+        self.mongo_user = settings["HTTPCACHE_MONGO_USER"] if "HTTPCACHE_MONGO_USER" in settings else None
+        self.mongo_pwd = settings["HTTPCACHE_MONGO_PWD"] if "HTTPCACHE_MONGO_PWD" in settings else None
+        self.mongo_mechanism = settings["HTTPCACHE_MONGO_MECHANISM"] if "HTTPCACHE_MONGO_MECHANISM" in settings else None
 
     def open_spider(self, spider):
         self.conn = pymongo.MongoClient(self.mongo_host, self.mongo_port)
         self.db = self.conn[self.mongo_db]
+        if self.mongo_user and self.mongo_pwd and self.mongo_mechanism:
+            self.db.authenticate(name=self.mongo_user, password=self.mongo_pwd, mechanism=self.mongo_mechanism)
         self.collection = self.db[spider.name]
 
     def close_spider(self, spider):
+        self.conn.close()
         pass
 
     def retrieve_response(self, spider, request):
@@ -100,7 +106,7 @@ class MongoCacheStorage(object):
         return response
 
     def store_response(self, spider, request, response):
-        """Store the given response in the redis."""
+        """Store the given response in the mongo."""
         key = request_fingerprint(request)
         response_headers = headers_dict_to_raw(response.headers)
         response_body = self._get_body(response.headers, response.body)
@@ -120,7 +126,11 @@ class MongoCacheStorage(object):
             'request_body': request_body,
         }
         #print stored_data
-        self.collection.insert({"_id": key, "value": stored_data})
+        try:
+            self.collection.insert({"_id": key, "value": stored_data})
+        except Exception, e:
+            print e.message
+            pass
 
     @staticmethod
     def _get_body(headers, body):

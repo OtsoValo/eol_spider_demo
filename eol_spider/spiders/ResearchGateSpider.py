@@ -77,7 +77,9 @@ class ResearchGateSpider(CrawlSpider):
         for alphabet in alphabet_list:
             url = "https://www.researchgate.net/directory/profiles/"+alphabet
             yield Request(url, headers=headers, callback=self.parse_profile_directory, dont_filter=True)
+            #break
 
+    #https://www.researchgate.net/directory/profiles/A
     def parse_profile_directory(self, response):
         if response.status == 429:
             raise CloseSpider(reason='被封了，准备切换ip')
@@ -88,7 +90,9 @@ class ResearchGateSpider(CrawlSpider):
                 extract():
             url = self.domain + "/" + url
             yield Request(url, headers=headers, callback=self.parse_profile_directory2, dont_filter=True)
+            #break
 
+    #https://www.researchgate.net/directory/profiles/A-1-63
     def parse_profile_directory2(self, response):
         if response.status == 429:
             raise CloseSpider(reason='被封了，准备切换ip')
@@ -98,8 +102,24 @@ class ResearchGateSpider(CrawlSpider):
                 '//ul[contains(@class, "list-directory")]/descendant::a/@href'). \
                 extract():
             url = self.domain + "/" + url
-            yield Request(url, headers=headers, callback=self.parse_profile_desc, dont_filter=True)
+            yield Request(url, headers=headers, callback=self.parse_profile_directory3, dont_filter=True)
+            #break
 
+    #https://www.researchgate.net/directory/profiles/A-le-1
+    def parse_profile_directory3(self, response):
+        if response.status == 429:
+            raise CloseSpider(reason='被封了，准备切换ip')
+        headers = response.request.headers
+        headers["referer"] = response.url
+        for url in response.xpath(
+                '//ul[contains(@class, "list-directory")]/descendant::a/@href'). \
+                extract():
+            url = self.domain + "/" + url
+            yield Request(url, headers=headers, callback=self.parse_profile_desc, dont_filter=True)
+            #break
+
+
+    #https://www.researchgate.net/profile/Gbechoevi_A_Alexandre
     def parse_profile_desc(self, response):
         if response.status == 429:
             raise CloseSpider(reason='被封了，准备切换ip')
@@ -108,6 +128,7 @@ class ResearchGateSpider(CrawlSpider):
         url = response.url + "/publications"
         return Request(url, headers=headers, callback=self.parse_publication, dont_filter=True)
 
+    #https://www.researchgate.net/profile/Gbechoevi_A_Alexandre/publications
     def parse_publication(self, response):
         if response.status == 429:
             raise CloseSpider(reason='被封了，准备切换ip')
@@ -119,6 +140,7 @@ class ResearchGateSpider(CrawlSpider):
             url = self.domain + "/" + url
             yield Request(url, headers=headers, callback=self.parse_article, dont_filter=True)
 
+    #https://www.researchgate.net/publication/262668925_Prognostic_factors_for_myelodysplastic_syndromes
     def parse_article(self, response):
         if response.status == 429:
             raise CloseSpider(reason='被封了，准备切换ip')
