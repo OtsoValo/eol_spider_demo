@@ -79,8 +79,8 @@ class ResearchGateSpider(CrawlSpider):
             yield Request(url, headers=headers, callback=self.parse_profile_directory, dont_filter=True)
 
     def parse_profile_directory(self, response):
-        #print response.body
-        #return
+        if response.status == 429:
+            raise CloseSpider(reason='被封了，准备切换ip')
         headers = response.request.headers
         headers["referer"] = response.url
         for url in response.xpath(
@@ -90,6 +90,8 @@ class ResearchGateSpider(CrawlSpider):
             yield Request(url, headers=headers, callback=self.parse_profile_directory2, dont_filter=True)
 
     def parse_profile_directory2(self, response):
+        if response.status == 429:
+            raise CloseSpider(reason='被封了，准备切换ip')
         headers = response.request.headers
         headers["referer"] = response.url
         for url in response.xpath(
@@ -99,31 +101,29 @@ class ResearchGateSpider(CrawlSpider):
             yield Request(url, headers=headers, callback=self.parse_profile_desc, dont_filter=True)
 
     def parse_profile_desc(self, response):
+        if response.status == 429:
+            raise CloseSpider(reason='被封了，准备切换ip')
         headers = response.request.headers
         headers["referer"] = response.url
-        print response.status
+        url = response.url + "/publications"
+        return Request(url, headers=headers, callback=self.parse_publication, dont_filter=True)
+
+    def parse_publication(self, response):
         if response.status == 429:
-            #os.system("/usr/bin/changeip")
-            #time.sleep(20)
-            #yield Request(response.url, headers=headers, dont_filter=True, callback=self.parse_profile_desc)
+            raise CloseSpider(reason='被封了，准备切换ip')
+        headers = response.request.headers
+        headers["referer"] = response.url
+        for url in response.xpath(
+                '//li[contains(@class, "li-publication")]/descendant::a[contains(@class, "js-publication-title-link")]/@href'). \
+                extract():
+            url = self.domain + "/" + url
+            yield Request(url, headers=headers, callback=self.parse_article, dont_filter=True)
+
+    def parse_article(self, response):
+        if response.status == 429:
             raise CloseSpider(reason='被封了，准备切换ip')
 
-        pass
-
-
-
-
-
-
-
-
     def close(self, reason):
-        #print "切换IP"
-        #os.system("/usr/bin/changeip")
-        #print "重启启动爬虫"
-        #self.start_requests()
-        #os.system("pwd")
-        #os.system("/usr/bin/start_spider")
         super(ResearchGateSpider, self).close(self, reason)
 
     def __init__(self, **kwargs):
